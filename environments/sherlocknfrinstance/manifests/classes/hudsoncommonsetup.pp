@@ -39,11 +39,17 @@ class hudsoncommonsetup {
         path => [ "/bin/", "/usr/bin" ] ,
         require => Exec["adding-conman-publish"],
     }
+
+    exec { "adding-config-service":
+      command => "echo '10.85.42.9   configService' | sudo tee --append /etc/hosts",
+      path => [ "/bin/", "/usr/bin" ] ,
+      require => Exec["adding-ops-statsd"],
+    }
     
     exec { "tcp-1":
         command => "echo 'net.core.somaxconn=1024' | sudo tee --append /etc/sysctl.d/sherlock.conf",
         path => [ "/bin/", "/usr/bin" ] ,
-        require => Exec["adding-ops-statsd"],
+        require => Exec["adding-config-service"],
     }
     
     exec { "tcp-2":
